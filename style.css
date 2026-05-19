@@ -69,8 +69,8 @@ body {
 }
 
 #hero {
-  min-height: 100vh;
-  background-color: #2c3424;
+  min-height: 100vh; 
+  background-color: #1f2a15;
   color: #e5e7eb;
   display: flex;
   flex-direction: column;
