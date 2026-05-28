@@ -13,10 +13,64 @@
     <nav class="navbar">
         <h3 class="logo">SantiagoDev</h3>
 
-        <ul class="nav-links">
+        <!-- <ul class="nav-links">
             <li><a href="#proyectos">Proyectos</a></li>
             <li><a href="#contacto">Contacto</a></li>
-        </ul>
+        </ul> -->
+
+
+        <div class="menu">
+            <a href="#top" class="link">
+                <span class="link-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor"
+                        viewBox="0 0 256 256">
+                        <rect width="256" height="256" fill="none"></rect>
+                        <path
+                            d="M213.3815,109.61945,133.376,36.88436a8,8,0,0,0-10.76339.00036l-79.9945,72.73477A8,8,0,0,0,40,115.53855V208a8,8,0,0,0,8,8H208a8,8,0,0,0,8-8V115.53887A8,8,0,0,0,213.3815,109.61945Z"
+                            fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="16"></path>
+                    </svg>
+                </span>
+                <span class="link-title">Inicio</span>
+            </a>
+
+            <a href="#proyectos" class="link">
+                <span class="link-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor"
+                        viewBox="0 0 256 256">
+                        <rect width="256" height="256" fill="none"></rect>
+                        <circle cx="128" cy="96" r="64" fill="none" stroke="currentColor" stroke-miterlimit="10"
+                            stroke-width="16"></circle>
+                        <path d="M30.989,215.99064a112.03731,112.03731,0,0,1,194.02311.002" fill="none"
+                            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16">
+                        </path>
+                    </svg>
+                </span>
+                <span class="link-title">Clientes</span>
+            </a>
+
+            <a href="#contacto" class="link">
+                <span class="link-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor"
+                        viewBox="0 0 256 256">
+                        <rect width="256" height="256" fill="none"></rect>
+                        <path
+                            d="M45.42853,176.99811A95.95978,95.95978,0,1,1,79.00228,210.5717l.00023-.001L45.84594,220.044a8,8,0,0,1-9.89-9.89l9.47331-33.15657Z"
+                            fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="16"></path>
+                        <line x1="96" y1="112" x2="160" y2="112" fill="none" stroke="currentColor"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line>
+                        <line x1="96" y1="144" x2="160" y2="144" fill="none" stroke="currentColor"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line>
+                    </svg>
+                </span>
+                <span class="link-title"> Contacto</span>
+            </a>
+
+
+        </div>
+
+
     </nav>
 
     <section id="hero">
@@ -26,7 +80,25 @@
                 <h1>
                     Santiago Gimenez
                 </h1>
-                <h2>Desarrollador Web</h2>
+                <!-- <h2>Desarrollador Web</h2> -->
+                <h2>
+                    <div class="subtitle">
+                        <div class="subtitleContent">
+                            <div class="content__container">
+                                <p class="content__container__text">
+                                    Desarrollador
+                                </p>
+
+                                <ul class="content__container__list">
+                                    <li class="content__container__list__item">Web!</li>
+                                    <li class="content__container__list__item">Front End!</li>
+                                    <li class="content__container__list__item">Web!</li>
+                                    <li class="content__container__list__item">Front End!</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </h2>
 
                 <p>
                     Desarrollo páginas web modernas para negocios y emprendedores que quieren tener presencia online y
@@ -36,14 +108,67 @@
                 <p class="availability">Disponible para trabajos freelance</p>
 
                 <div id="botones-hero">
-                    <a href="#proyectos">Ver proyectos</a>
-                    <a href="#contacto">Contactar</a>
+                    <a href="#proyectos">
+                        <button class="ui-btn">
+                            <span>
+                                Proyectos
+                            </span>
+                        </button>
+                    </a>
+                    <a href="#contacto">
+                        <button class="buttonContacto">
+                            <div class="svg-wrapper-1">
+                                <div class="svg-wrapper">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                        <path fill="none" d="M0 0h24v24H0z"></path>
+                                        <path fill="currentColor"
+                                            d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z">
+                                        </path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <span>Contacto</span>
+                        </button>
+                    </a href="#contacto">
                 </div>
             </div>
+
 
             <div class="hero-img">
                 <img src="media/WhatsApp Image 2026-04-08 at 15.31.55.jpeg" alt="Santiago Gimenez">
             </div>
+
+
+
+            <!-- <ul class="example-2">
+                    <li class="icon-content">
+                        <a href="https://linkedin.com/" aria-label="LinkedIn" data-social="linkedin">
+                            <div class="filled"></div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-linkedin" viewBox="0 0 16 16" xml:space="preserve">
+                                <path
+                                    d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </a>
+                        <div class="tooltip">LinkedIn</div>
+                    </li>
+                    <li class="icon-content">
+                        <a href="https://www.github.com/" aria-label="GitHub" data-social="github">
+                            <div class="filled"></div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-github" viewBox="0 0 16 16" xml:space="preserve">
+                                <path
+                                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </a>
+                        <div class="tooltip">GitHub</div>
+                    </li>
+
+
+                </ul> -->
+
 
         </div>
     </section>
@@ -63,7 +188,7 @@
                     <p>
                         Página web orientada a atraer nuevos alumnos, mostrando horarios, ubicación y modalidades de
                         entrenamiento de forma clara y facilitando el contacto directo por WhatsApp.
-                    
+
                     <div class="result">
 
 
@@ -148,7 +273,29 @@
             Escribime y te ayudo a crear una solución profesional.
         </p>
 
-        <div class="contact-buttons">
+
+        <div class="cardContacto">
+
+            <a href="https://www.linkedin.com/in/santiago-gimenez-41b603374/" class="socialContainer containerThree">
+                <svg class="socialSvg linkdinSvg" viewBox="0 0 448 512">
+                    <path
+                        d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z">
+                    </path>
+                </svg>
+            </a>
+
+            <a href="https://wa.me/543765115836?text=Hola%20Santiago,%20vi%20tu%20portfolio%20y%20quiero%20consultar%20por%20una%20página%20web"
+                target="_blank"" class=" socialContainer containerFour">
+                <svg class="socialSvg whatsappSvg" viewBox="0 0 16 16">
+                    <path
+                        d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z">
+                    </path>
+                </svg>
+            </a>
+        </div>
+
+
+        <!-- <div class="contact-buttons">
             <a href="https://wa.me/543765115836?text=Hola%20Santiago,%20vi%20tu%20portfolio%20y%20quiero%20consultar%20por%20una%20página%20web"
                 target="_blank" class="whatsapp">
                 Escribirme por WhatsApp
@@ -157,7 +304,7 @@
             <a href="mailto:santiagogimenez471@gmail.com" class="email">
                 Enviar Email
             </a>
-        </div>
+        </div> -->
     </section>
 
 
