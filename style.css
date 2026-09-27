@@ -1006,7 +1006,7 @@ body { background: #1b211b; color: var(--text); }
 .browser-bar i { width: 7px; height: 7px; border-radius: 50%; background: #737a70; }
 .browser-bar i:first-child { background: #d48770; } .browser-bar i:nth-child(2) { background: #d7b66f; } .browser-bar i:nth-child(3) { background: #89a980; }
 .browser-bar span { margin-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; color: #aeb3a9; }
-.browser-frame img { height: 250px; object-fit: cover; object-position: top; transition: transform .35s ease, filter .35s ease; }
+.browser-frame img { width: 100%; height: auto; object-fit: contain; object-position: center; background: #101310; transition: transform .35s ease, filter .35s ease; }
 .project-card:hover .browser-frame img { transform: scale(1.025); filter: brightness(.88); }
 .project-content { padding: 30px; }
 .project-card--featured .project-content { justify-content: flex-start; padding: 22px; }
@@ -1054,11 +1054,12 @@ body { background: #1b211b; color: var(--text); }
   .projects-container { grid-template-columns: 1fr; gap: 20px; }
   .project-card--featured { grid-column: auto; flex-direction: column; }
   .browser-frame { flex: initial; }
-  .browser-frame img { height: clamp(210px, 65vw, 330px); }
+  .browser-frame img { height: auto; }
   .project-content, .project-card--featured .project-content { padding: 22px; }
   .contact { padding: 84px 20px 92px; }
   .cardContacto { gap: 10px; }
   .whatsapp-primary { min-height: 76px; padding: 14px; }
+  .whatsapp-primary .social-label { font-size: .95rem; }
   .containerThree { width: 68px; height: 76px; flex: 0 0 68px; }
 }
 @media (max-width: 420px) {
