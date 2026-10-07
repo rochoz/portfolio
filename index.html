@@ -8,21 +8,26 @@
     <title>Santiago Gimenez | Desarrollador Web Freelance en Misiones</title>
     <meta name="description"
         content="Desarrollador web freelance en Misiones, Argentina. Creo páginas y catálogos online para negocios y emprendedores, enfocados en generar consultas por WhatsApp.">
+    <meta property="og:title" content="Santiago Gimenez | Desarrollador Web Freelance en Misiones">
+    <meta property="og:description" content="Desarrollo páginas y catálogos online para negocios y emprendedores, enfocados en facilitar consultas por WhatsApp.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/rochoz/portfolio/main/media/WhatsApp%20Image%202026-04-08%20at%2015.31.55.jpeg">
+    <meta property="og:image:width" content="971">
+    <meta property="og:image:height" content="1599">
+    <meta property="og:image:alt" content="Santiago Gimenez, desarrollador web freelance">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body>
 
-    <nav class="navbar">
-        <h3 class="logo">SantiagoDev</h3>
+    <nav class="navbar" aria-label="Navegación principal">
+        <p class="logo">SantiagoDev</p>
 
-        <!-- <ul class="nav-links">
-            <li><a href="#proyectos">Proyectos</a></li>
-            <li><a href="#contacto">Contacto</a></li>
-        </ul> -->
-
-
-        <div class="menu">
-            <a href="#top" class="link">
+        <button class="menu-toggle" type="button" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="primary-menu">
+            <span aria-hidden="true"><i></i><i></i><i></i></span>
+        </button>
+        <div class="menu" id="primary-menu">
+            <a href="#hero" class="link">
                 <span class="link-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor"
                         viewBox="0 0 256 256">
@@ -48,8 +53,14 @@
                         </path>
                     </svg>
                 </span>
-                <span class="link-title">Clientes</span>
+                <span class="link-title">Proyectos</span>
             </a>
+
+            <a href="#servicios" class="link"><span class="link-title">Servicios</span></a>
+
+            <a href="#como-trabajo" class="link"><span class="link-title">Cómo trabajo</span></a>
+
+            <a href="#preguntas-frecuentes" class="link"><span class="link-title">FAQ</span></a>
 
             <a href="#contacto" class="link">
                 <span class="link-icon">
@@ -72,9 +83,9 @@
 
         </div>
 
-
     </nav>
 
+    <main>
     <section id="hero">
         <div class="hero-container">
 
@@ -83,9 +94,9 @@
                     Santiago Gimenez
                 </h1>
                 <!-- <h2>Desarrollador Web</h2> -->
-                <h2>
-                    <div class="subtitle">
-                        <div class="subtitleContent">
+                <h2 class="sr-only">Desarrollador web y Front End</h2>
+                <div class="subtitle" aria-hidden="true">
+                    <div class="subtitleContent">
                             <div class="content__container">
                                 <p class="content__container__text">
                                     Desarrollador
@@ -97,10 +108,9 @@
                                     <li class="content__container__list__item">Web!</li>
                                     <li class="content__container__list__item">Front End!</li>
                                 </ul>
-                            </div>
-                        </div>
                     </div>
-                </h2>
+                </div>
+            </div>
 
                 <p>
                     Desarrollo páginas web modernas para negocios y emprendedores que quieren tener presencia online y
@@ -110,34 +120,28 @@
                 <p class="availability"><span aria-hidden="true"></span>Disponible para proyectos</p>
 
                 <div id="botones-hero">
-                    <a href="#proyectos">
-                        <button class="ui-btn">
-                            <span>
-                                Proyectos
-                            </span>
-                        </button>
+                    <a href="#proyectos" class="ui-btn">
+                        <span>Proyectos</span>
                     </a>
-                    <a href="#contacto">
-                        <button class="buttonContacto">
-                            <div class="svg-wrapper-1">
-                                <div class="svg-wrapper">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                        <path fill="none" d="M0 0h24v24H0z"></path>
-                                        <path fill="currentColor"
-                                            d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z">
-                                        </path>
-                                    </svg>
-                                </div>
+                    <a href="https://wa.me/543765115836?text=Hola%20Santiago%2C%20vi%20tu%20portfolio%20y%20quiero%20consultar%20por%20mi%20proyecto." class="buttonContacto" target="_blank" rel="noopener noreferrer">
+                        <div class="svg-wrapper-1">
+                            <div class="svg-wrapper">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                                    <path fill="none" d="M0 0h24v24H0z"></path>
+                                    <path fill="currentColor"
+                                        d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z">
+                                    </path>
+                                </svg>
                             </div>
-                            <span>Contacto</span>
-                        </button>
+                        </div>
+                        <span>Hablemos por WhatsApp</span>
                     </a>
                 </div>
             </div>
 
 
             <div class="hero-img">
-                <img src="media/WhatsApp Image 2026-04-08 at 15.31.55.jpeg" alt="Santiago Gimenez">
+                <img src="media/WhatsApp Image 2026-04-08 at 15.31.55.jpeg" alt="Retrato de Santiago Gimenez" width="971" height="1599" decoding="async">
             </div>
 
 
@@ -245,9 +249,9 @@
                     </p>
                     <div class="service-feature-price">
                         <p class="service-price-label">Inversión inicial</p>
-                        <p class="service-price">Desde USD 200</p>
+                        <p class="service-price">Desde USD 120</p>
                     </div>
-                    <a class="service-cta service-cta--primary" href="https://wa.me/543765115836?text=Hola%20Santiago,%20quiero%20consultar%20por%20una%20Landing%20Page%20desde%20USD%20200."
+                    <a class="service-cta service-cta--primary" href="https://wa.me/543765115836?text=Hola%20Santiago,%20quiero%20consultar%20por%20una%20Landing%20Page%20desde%20USD%20120."
                         target="_blank" rel="noopener noreferrer">
                         Consultar por WhatsApp <span aria-hidden="true">↗</span>
                     </a>
@@ -257,7 +261,7 @@
                     <ul class="service-includes">
                         <li>Diseño personalizado y adaptable a celulares, tablets y escritorio</li>
                         <li>Integración con WhatsApp y formulario de contacto</li>
-                        <li>SEO básico y publicación del sitio</li>
+                        <li>SEO básico y puesta online del sitio</li>
                     </ul>
                 </div>
             </article>
@@ -279,7 +283,7 @@
                         <ul class="service-includes">
                             <li>Diseño personalizado y desarrollo responsive</li>
                             <li>WhatsApp y formularios de contacto</li>
-                            <li>SEO básico y publicación</li>
+                            <li>SEO básico y puesta online del sitio</li>
                         </ul>
                         <div class="service-row-action">
                             <p class="service-price-label">Presupuesto según el alcance</p>
@@ -303,7 +307,7 @@
                                 <li>Productos con imágenes, nombres, descripciones y precios</li>
                                 <li>Navegación por categorías y diseño responsive</li>
                                 <li>Consultas directas por WhatsApp</li>
-                                <li>Publicación del catálogo</li>
+                                <li>Puesta online del catálogo</li>
                             </ul>
                             <p class="service-note">Es un catálogo para consultas; no incluye carrito ni pagos online.</p>
                         </div>
@@ -327,7 +331,7 @@
                         <ul class="service-includes">
                             <li>Revisión del sitio y su contenido</li>
                             <li>Mejora del diseño, la navegación y las llamadas a la acción</li>
-                            <li>Desarrollo responsive y publicación del nuevo sitio</li>
+                            <li>Desarrollo responsive y puesta online del nuevo sitio</li>
                         </ul>
                         <div class="service-row-action">
                             <p class="service-price-label">Presupuesto según el alcance</p>
@@ -363,7 +367,8 @@
                             <p class="service-note">Nuevas secciones, rediseños o ampliaciones se cotizan por separado.</p>
                         </div>
                         <div class="service-row-action">
-                            <p class="service-price-label">Servicio independiente</p>
+                        <p class="service-price-label">AR$30.000/mes</p>
+                        <p class="service-note">Sujeto a actualización.</p>
                             <a class="service-cta" href="https://wa.me/543765115836?text=Hola%20Santiago,%20quiero%20consultar%20por%20mantenimiento%20web."
                                 target="_blank" rel="noopener noreferrer">
                                 Consultar mantenimiento <span aria-hidden="true">↗</span>
@@ -402,45 +407,37 @@
                 <h3>Condiciones generales</h3>
                 <div class="services-terms-list">
                     <p><strong>Plazos:</strong> se acuerdan según el alcance y cuándo esté disponible la información necesaria.</p>
-                    <p><strong>Forma de pago:</strong> 50% al comenzar y 50% al finalizar el proyecto.</p>
-                    <p><strong>Dominio y hosting:</strong> se configuran o contratan aparte según cada proyecto.</p>
+                    <p><strong>Forma de pago:</strong> depende del alcance del proyecto. Para proyectos pequeños, generalmente se trabaja con un anticipo y un pago final. En proyectos de mayor alcance, el pago puede dividirse en etapas vinculadas al avance y alcance del proyecto.</p>
+                    <p><strong>Publicación, dominio y hosting:</strong> puedo dejar el sitio publicado y operativo. El dominio y el hosting se contratan aparte, salvo que se acuerden como servicios adicionales.</p>
                     <p><strong>Ampliaciones:</strong> nuevas funcionalidades o secciones importantes se cotizan por separado.</p>
                 </div>
             </aside>
         </div>
     </section>
 
-    <section id="proyectos" class="projects">
-        <h2 class="autoShow">Proyectos</h2>
+    <section id="proyectos" class="projects" aria-labelledby="projects-title">
+        <h2 id="projects-title">Proyectos</h2>
 
         <div class="projects-container">
 
             <!-- Proyecto PZ -->
 
-            <div class="project-card project-card--featured autoShow">
+            <div class="project-card project-card--featured">
                 <div class="browser-frame">
                     <div class="browser-bar" aria-hidden="true"><i></i><i></i><i></i><span>pz-team.vercel.app</span>
-                    </div><img src="media/cap-pzteam.jpeg" alt="Sitio Web Moderno - Artes Marciales">
+                    </div><img src="media/cap-pzteam.jpeg" alt="Captura del sitio web de PZ Team" width="1304" height="624" loading="lazy" decoding="async">
                 </div>
 
                 <div class="project-content">
-                    <h3>Sitio web – PZ Team</h3>
-                    <p>
-                        Página web orientada a atraer nuevos alumnos, mostrando horarios, ubicación y modalidades de
-                        entrenamiento de forma clara y facilitando el contacto directo por WhatsApp.
-                    </p>
-
-                    <div class="result">
-                        <p>✔ Optimizado para celulares</p>
-                        <p>✔ Enfocado en generar consultas de nuevos alumnos</p>
-                    </div>
-
-                    <!-- <p class="tech">
-                        HTML · CSS · Responsive
-                    </p> -->
+                    <h3>PZ Team</h3>
+                    <p class="project-type">Dojo / academia</p>
+                    <dl class="project-facts">
+                        <div><dt>Necesidad</dt><dd>Presentar horarios, ubicación y modalidades de entrenamiento, y facilitar el contacto.</dd></div>
+                        <div><dt>Desarrollo</dt><dd>Sitio informativo con datos de la academia y acceso directo a WhatsApp.</dd></div>
+                    </dl>
 
                     <div class="project-buttons">
-                        <a href="https://pz-team.vercel.app" target="_blank">Ver página</a>
+                        <a href="https://pz-team.vercel.app" target="_blank" rel="noopener noreferrer">Ver sitio de PZ Team</a>
                     </div>
                 </div>
             </div>
@@ -448,101 +445,140 @@
             <!-- Proyecto Fernanda -->
 
 
-            <div class="project-card project-card--featured autoShow">
+            <div class="project-card project-card--featured">
                 <div class="browser-frame">
                     <div class="browser-bar" aria-hidden="true">
                         <i></i><i></i><i></i><span>estudiocontablebutiuk.vercel.app</span>
-                    </div><img src="media/cap-fernanda.jpeg" alt="Landing Page Tradicional de Estudio Contable">
+                    </div><img src="media/cap-fernanda.jpeg" alt="Captura de la landing page del Estudio Contable Butiuk" width="1294" height="620" loading="lazy" decoding="async">
                 </div>
 
                 <div class="project-content">
-                    <h3>Estudio Contable Butiuk - Landing Page Profesional / Tradicional</h3>
-                    <p>
-                        Página web institucional diseñada para transmitir confianza, organizar múltiples servicios de
-                        forma clara y facilitar el contacto de potenciales clientes.
-                    </p>
-
-                    <div class="result">
-                        <p>✔ Optimizado para celulares</p>
-                        <p>✔ Enfocado en generar consultas profesionales</p>
-                        <p>✔ Presentación clara de servicios contables y laborales</p>
-                    </div>
-
-                    <!-- <p class="tech">
-                        HTML · CSS · Responsive
-                    </p> -->
+                    <h3>Estudio Contable Butiuk</h3>
+                    <p class="project-type">Estudio contable</p>
+                    <dl class="project-facts">
+                        <div><dt>Necesidad</dt><dd>Presentar con claridad sus servicios contables y laborales.</dd></div>
+                        <div><dt>Desarrollo</dt><dd>Landing page institucional que organiza la información y facilita el contacto.</dd></div>
+                    </dl>
 
                     <div class="project-buttons">
-                        <a href="https://estudiocontablebutiuk.vercel.app" target="_blank">Ver página</a>
+                        <a href="https://estudiocontablebutiuk.vercel.app" target="_blank" rel="noopener noreferrer">Ver sitio del Estudio Contable Butiuk</a>
                     </div>
                 </div>
             </div>
 
             <!-- Proyecto Bere -->
 
-            <div class="project-card project-card--featured autoShow">
+            <div class="project-card project-card--featured">
                 <div class="browser-frame">
                     <div class="browser-bar" aria-hidden="true">
                         <i></i><i></i><i></i><span>jonica-accesories.vercel.app</span>
-                    </div><img src="media/captura-jonica.jpeg" alt="Catálogo de joyas">
+                    </div><img src="media/captura-jonica.jpeg" alt="Captura del catálogo online de joyas" width="1302" height="614" loading="lazy" decoding="async">
                 </div>
 
                 <div class="project-content">
                     <h3>Catálogo web – Tienda de Joyas</h3>
-                    <p>
-                        Catálogo online diseñado para mostrar productos con precios visibles, organizar el
-                        contenido por
-                        categorías y facilitar consultas rápidas mediante WhatsApp e Instagram.
-                    </p>
-
-                    <div class="result">
-                        <p>✔ Optimizado para celulares</p>
-                        <p>✔ Enfocado en aumentar consultas y ventas</p>
-                        <p>✔ Productos destacados con ofertas y estado de stock</p>
-                    </div>
-
-                    <!-- <p class="tech">
-                        HTML · CSS · Responsive
-                    </p> -->
+                    <p class="project-type">Emprendimiento de joyería</p>
+                    <dl class="project-facts">
+                        <div><dt>Necesidad</dt><dd>Mostrar productos, precios y categorías en un catálogo consultable.</dd></div>
+                        <div><dt>Desarrollo</dt><dd>Catálogo online con consultas por WhatsApp e Instagram.</dd></div>
+                    </dl>
 
                     <div class="project-buttons">
-                        <a href="https://jonica-accesories.vercel.app/index.html#top" target="_blank">Ver
-                            página</a>
+                        <a href="https://jonica-accesories.vercel.app/index.html#top" target="_blank" rel="noopener noreferrer">Ver catálogo online de joyas</a>
                     </div>
                 </div>
             </div>
 
-            <div class="project-card autoShow">
+            <div class="project-card">
                 <div class="browser-frame">
                     <div class="browser-bar" aria-hidden="true">
                         <i></i><i></i><i></i><span>estudiocontablezl.com</span>
-                    </div><img src="media/cap-zl.jpeg" alt="Estudio Contable">
+                    </div><img src="media/cap-zl.jpeg" alt="Captura de la landing page del Estudio Contable ZL" width="1305" height="616" loading="lazy" decoding="async">
                 </div>
 
                 <div class="project-content">
-                    <h3>Estudio Contable ZL - Landing Page Profesional / Moderna</h3>
-                    <p>
-                        Diseño y desarrollo de una presencia digital orientada a comunicar el diferencial del
-                        estudio y
-                        generar nuevas oportunidades comerciales.
-                    </p>
-
-                    <div class="result">
-                        <p>✔ Optimizado para celulares</p>
-                        <p>✔ Enfocado en aumentar consultas</p>
-                        <p>✔ Formulario de Contacto</p>
-                    </div>
-
-                    <!-- <p class="tech">
-                        HTML · CSS · Responsive
-                    </p> -->
+                    <h3>Estudio Contable ZL</h3>
+                    <p class="project-type">Estudio contable</p>
+                    <dl class="project-facts">
+                        <div><dt>Necesidad</dt><dd>Comunicar la propuesta del estudio y facilitar consultas.</dd></div>
+                        <div><dt>Desarrollo</dt><dd>Landing page con formulario de contacto.</dd></div>
+                    </dl>
 
                     <div class="project-buttons">
-                        <a href="https://estudiocontablezl.com" target="_blank">Ver página</a>
+                        <a href="https://estudiocontablezl.com" target="_blank" rel="noopener noreferrer">Ver sitio del Estudio Contable ZL</a>
                     </div>
                 </div>
             </div>
 
+        </div>
+    </section>
+
+    <section id="preguntas-frecuentes" class="faq" aria-labelledby="faq-title">
+        <div class="faq-container">
+            <header class="faq-heading">
+                <h2 id="faq-title">Preguntas frecuentes</h2>
+                <p>Información clara sobre el desarrollo de tu página web, los tiempos, la inversión y el trabajo después de publicar.</p>
+            </header>
+
+            <div class="faq-list">
+                <details class="faq-item">
+                    <summary>¿Cuánto tarda el desarrollo de una página web?<span class="faq-toggle" aria-hidden="true"></span></summary>
+                    <div class="faq-answer">
+                        <p>Depende del alcance, la cantidad de páginas o secciones, las funcionalidades y la disponibilidad del contenido. También influye la velocidad del intercambio de comentarios durante el proyecto. El tiempo se define según esas características.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>¿El dominio y el hosting están incluidos?<span class="faq-toggle" aria-hidden="true"></span></summary>
+                    <div class="faq-answer">
+                        <p>Puedo dejar el sitio publicado y operativo. El dominio y el hosting no están incluidos por defecto; si lo necesitás, puedo ayudarte a contratarlos o gestionarlos como servicios adicionales.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>¿Ofrecés mantenimiento después de publicar el sitio?<span class="faq-toggle" aria-hidden="true"></span></summary>
+                    <div class="faq-answer">
+                        <p>Sí. Actualmente, el servicio mensual de mantenimiento tiene un valor de AR$30.000/mes, sujeto a actualización. Además, después de publicar el sitio hay 15 días de mantenimiento sin costo para ajustes menores o correcciones que surjan durante la puesta en producción.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>¿Cómo se realizan los pagos?<span class="faq-toggle" aria-hidden="true"></span></summary>
+                    <div class="faq-answer">
+                        <p>La forma de pago depende del alcance del proyecto. Para proyectos pequeños, generalmente se trabaja con un anticipo y un pago final. En proyectos de mayor alcance, el pago puede dividirse en etapas vinculadas al avance y alcance del proyecto.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>¿Puedo pedir cambios después de terminar el proyecto?<span class="faq-toggle" aria-hidden="true"></span></summary>
+                    <div class="faq-answer">
+                        <p>Antes de la entrega final se incluyen dos rondas de revisiones. Después de publicar, los 15 días de mantenimiento sin costo cubren ajustes menores o correcciones de puesta en producción. Nuevas secciones, rediseños importantes, funcionalidades nuevas y cambios estructurales se cotizan por separado.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>¿Podés rediseñar una página web existente?<span class="faq-toggle" aria-hidden="true"></span></summary>
+                    <div class="faq-answer">
+                        <p>Sí. Puedo analizar el sitio actual y proponer mejoras visuales, estructurales o de experiencia, según las necesidades y el alcance del proyecto.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>¿Hacés tiendas online o proyectos de e-commerce?<span class="faq-toggle" aria-hidden="true"></span></summary>
+                    <div class="faq-answer">
+                        <p>El e-commerce no es mi especialidad principal, pero puedo evaluar cada proyecto. La viabilidad y la cotización dependen de sus requerimientos y complejidad.</p>
+                    </div>
+                </details>
+                <details class="faq-item">
+                    <summary>¿Cuánto cuesta una página web?<span class="faq-toggle" aria-hidden="true"></span></summary>
+                    <div class="faq-answer">
+                        <p>Las Landing Pages parten desde USD 120. Ese valor corresponde únicamente a una Landing Page. Otros proyectos se cotizan según el alcance, la cantidad de secciones, la complejidad, las funcionalidades y las necesidades específicas.</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="faq-cta">
+                <div>
+                    <h3>¿No encontraste la respuesta que buscabas?</h3>
+                    <p>Contame qué necesitás y te ayudo a definir la mejor opción para tu proyecto.</p>
+                </div>
+                <a href="https://wa.me/543765115836?text=Hola%20Santiago,%20vi%20tu%20portfolio%20y%20quiero%20solicitar%20una%20cotizaci%C3%B3n%20para%20mi%20proyecto."
+                    target="_blank" rel="noopener noreferrer">Solicitar cotización</a>
+            </div>
         </div>
     </section>
 
@@ -558,7 +594,7 @@
         <div class="cardContacto">
 
             <a href="https://wa.me/543765115836?text=Hola%20Santiago,%20vi%20tu%20portfolio%20y%20quiero%20consultar%20por%20una%20página%20web"
-                target="_blank" class="socialContainer containerFour whatsapp-primary"
+                target="_blank" rel="noopener noreferrer" class="socialContainer containerFour whatsapp-primary"
                 aria-label="Escribime por WhatsApp">
                 <span class="social-label">Hablemos por WhatsApp</span>
                 <svg class="socialSvg whatsappSvg" viewBox="0 0 16 16">
@@ -568,7 +604,7 @@
                 </svg>
             </a>
 
-            <a href="https://www.linkedin.com/in/santiago-gimenez-41b603374/" class="socialContainer containerThree">
+            <a href="https://www.linkedin.com/in/santiago-gimenez-41b603374/" class="socialContainer containerThree" aria-label="Perfil de Santiago Gimenez en LinkedIn" target="_blank" rel="noopener noreferrer">
                 <svg class="socialSvg linkdinSvg" viewBox="0 0 448 512">
                     <path
                         d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z">
@@ -591,19 +627,18 @@
             </a>
         </div> -->
     </section>
-
-
-
-
-</body>
+    </main>
 
 <footer class="footer">
     <p>© 2026 Santiago Gimenez</p>
 
-    <div class="footer-links">
+    <nav class="footer-links" aria-label="Navegación del pie de página">
         <a href="#proyectos">Proyectos</a>
         <a href="#contacto">Contacto</a>
-    </div>
+    </nav>
 </footer>
+
+<script src="script.js" defer></script>
+</body>
 
 </html>
