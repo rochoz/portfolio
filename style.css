@@ -889,8 +889,9 @@ button {
 }
 
 body { background: #1b211b; color: var(--text); }
-.navbar { background: rgba(17, 20, 17, .88); border-bottom: 1px solid var(--line); }
+.navbar { right: 0; left: 0; width: auto; background: rgba(17, 20, 17, .88); border-bottom: 1px solid var(--line); }
 .navbar .logo { margin: 0; }
+main { overflow-x: clip; }
 .menu { border-radius: 999px; background: #242a24; border: 1px solid var(--line); }
 .menu { display: flex; }
 .link { border-radius: 999px; }
