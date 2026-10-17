@@ -616,7 +616,6 @@ button {
   overflow: hidden;
   transition: 0.3s;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   position: relative; /* ancla el badge "Cliente real" a la card */
 }
 
@@ -1009,21 +1008,21 @@ main { overflow-x: clip; }
 .buttonContacto:hover span { transform: none; }
 
 .projects { background: #222920; padding: 100px 6vw; }
-.projects h2 { font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -.04em; }
+.projects h2 { max-width: 1180px; margin: 0 auto 48px; text-align: left; font-size: clamp(2.125rem, 4.4vw, 3.75rem); line-height: 1; letter-spacing: -.04em; }
 .projects-container { max-width: 1180px; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
 .project-card { border-radius: var(--shape); background: var(--surface); border-color: var(--line); text-align: left; }
 .project-card:hover { transform: translateY(-4px); }
 .project-card--featured { grid-column: auto; flex-direction: column; align-items: stretch; min-height: 0; }
 .project-card img { display: block; width: 100%; height: 210px; object-fit: cover; }
-.browser-frame { flex: 0 0 auto; width: calc(100% - 32px); min-width: 0; align-self: stretch; margin: 16px 16px 0; overflow: hidden; border: 1px solid rgba(255,255,255,.13); border-radius: 12px; background: #101310; box-shadow: 0 20px 55px rgba(0,0,0,.32); }
+.browser-frame { flex: 0 0 auto; min-width: 0; overflow: hidden; background: #101310; }
 .browser-bar { height: 32px; display: flex; align-items: center; gap: 6px; padding: 0 10px; background: #30362f; border-bottom: 1px solid rgba(255,255,255,.08); }
 .browser-bar i { width: 7px; height: 7px; border-radius: 50%; background: #737a70; }
 .browser-bar i:first-child { background: #d48770; } .browser-bar i:nth-child(2) { background: #d7b66f; } .browser-bar i:nth-child(3) { background: #89a980; }
 .browser-bar span { margin-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; color: #aeb3a9; }
 .browser-frame img { width: 100%; height: auto; object-fit: contain; object-position: center; background: #101310; transition: transform .35s ease, filter .35s ease; }
 .project-card:hover .browser-frame img { transform: scale(1.025); filter: brightness(.88); }
-.project-content { padding: 30px; }
-.project-card--featured .project-content { justify-content: flex-start; padding: 22px; }
+.project-content { padding: 28px; }
+.project-card--featured .project-content { justify-content: flex-start; }
 .project-content h3 { font-size: 1.35rem; line-height: 1.25; margin-bottom: 12px; }
 .project-content p { line-height: 1.6; }
 .project-content .result { font-weight: 400; }
@@ -1106,9 +1105,8 @@ main { overflow-x: clip; }
   .projects { padding: 76px 20px; }
   .projects-container { grid-template-columns: 1fr; gap: 20px; }
   .project-card--featured { grid-column: auto; flex-direction: column; }
-  .browser-frame { flex: initial; }
   .browser-frame img { height: auto; }
-  .project-content, .project-card--featured .project-content { padding: 22px; }
+  .project-content { padding: 22px; }
   .contact { padding: 84px 20px 92px; }
   .cardContacto { gap: 10px; }
   .whatsapp-primary { min-height: 76px; padding: 14px; }
@@ -1125,16 +1123,16 @@ main { overflow-x: clip; }
   .content__container__list { padding-left: 140px; }
 }
 
-.project-type { margin: 0 0 12px !important; color: var(--accent-strong) !important; font-size: .84rem !important; font-weight: 650; }
-.project-facts { display: grid; gap: 10px; margin: 0 0 18px; }
-.project-facts div { display: grid; grid-template-columns: 82px minmax(0, 1fr); gap: 10px; }
-.project-facts dt { color: var(--text); font-size: .83rem; font-weight: 700; }
-.project-facts dd { color: #bfc2b7; font-size: .88rem; line-height: 1.55; }
+.project-type { margin: 0 0 12px !important; color: var(--accent-strong) !important; font-size: .875rem !important; font-weight: 700; letter-spacing: .04em; }
+.project-facts { display: grid; gap: 12px; margin: 0 0 18px; }
+.project-facts div { display: grid; grid-template-columns: 82px minmax(0, 1fr); gap: 12px; }
+.project-facts dt { color: #b5b9ae; font-size: .75rem; font-weight: 700; letter-spacing: .05em; line-height: 1.5; }
+.project-facts dd { color: var(--text); font-size: .9375rem; font-weight: 400; line-height: 1.55; }
 .project-buttons a { display: inline-flex; min-height: 44px; align-items: center; padding: 10px 15px; white-space: normal; }
 .project-buttons a:focus-visible, #botones-hero a:focus-visible { outline: 3px solid var(--accent-strong); outline-offset: 4px; }
 
 @media (max-width: 480px) {
-  .project-facts div { grid-template-columns: 1fr; gap: 2px; }
+  .project-facts div { grid-template-columns: 1fr; gap: 4px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-container { animation: none; }
