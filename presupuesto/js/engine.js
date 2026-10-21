@@ -69,6 +69,12 @@ CALC.engine = (function () {
     if (r.tipo_proyecto === "catalogo" && r.cantidad === "mas_10") {
       motivos.push("Más de 10 productos en el catálogo");
     }
+    /* Catálogo: la redacción de fichas de producto se cotiza aparte. */
+    var reglasRed = cfg().redaccion || {};
+    var reglaRed = reglasRed[r.tipo_proyecto];
+    if (r.redaccion === "si" && reglaRed && reglaRed.modo === "manual") {
+      motivos.push("Redacción de fichas de producto: se cotiza aparte");
+    }
     if ((r.funcionalidades || []).indexOf("a_medida") !== -1) {
       motivos.push("Función especial a medida a evaluar");
     }
@@ -188,7 +194,7 @@ CALC.engine = (function () {
     /* --- Funcionalidades --- */
     var funcs = r.funcionalidades || [];
     funcs.forEach(function (fid) {
-      if (fid === "animaciones" || fid === "redaccion") return; // reglas conjuntas más abajo
+      if (fid === "animaciones") return; // regla conjunta con el diseño (más abajo)
       var f = buscarPorId(c.funcionalidades, fid);
       if (!f) return;
       var pr = pricingDe(f.pricing, r.tipo_proyecto);
@@ -215,16 +221,19 @@ CALC.engine = (function () {
       res.pendientes.push(f.nombre + ": sin tarifa definida" + detalle);
     });
 
-    /* --- Contenido y redacción (sin doble cobro) --- */
-    var tieneRedaccion = funcs.indexOf("redaccion") !== -1;
+    /* --- Contenido --- */
     var desdeCero = r.contenido === "desde_cero";
     if (desdeCero) {
+      var contenidoCero = buscarPorId(c.contenidos, "desde_cero");
       res.lineas.push({
         etiqueta: "Contenido",
-        valor: "Preparación desde cero"
+        valor: "Preparación desde cero",
+        nota: contenidoCero && typeof contenidoCero.pricing === "number"
+          ? formatearImporte(contenidoCero.pricing)
+          : ""
       });
-      if (tieneRedaccion && c.reglas.redaccionCubiertaSiContenidoDesdeCero) {
-        res.pendientes.push("Redacción y preparación de contenido desde cero: sin tarifa definida; se consideran una sola vez");
+      if (typeof contenidoCero.pricing === "number") {
+        adicionales += contenidoCero.pricing;
       } else {
         res.pendientes.push("Preparación de contenido desde cero: sin tarifa definida");
       }
@@ -233,9 +242,65 @@ CALC.engine = (function () {
       if (contenido) {
         res.lineas.push({ etiqueta: "Contenido", valor: contenido.nombre });
       }
-      if (tieneRedaccion) {
-        res.lineas.push({ etiqueta: "Redacción de textos", valor: "Pendiente de cotización" });
-        res.pendientes.push("Redacción de textos: sin tarifa definida");
+    }
+
+    /* --- Redacción de textos (regla propia, calculada por alcance) --- */
+    if (r.redaccion === "si") {
+      var regla = c.redaccion[r.tipo_proyecto];
+      if (!regla) {
+        res.pendientes.push("Redacción de textos: sin regla definida para este tipo de proyecto");
+      } else if (regla.modo === "manual") {
+        /* Catálogo: las fichas de producto se cotizan aparte. */
+        res.motivosManual.push("Redacción de fichas de producto: se cotiza aparte");
+      } else if (desdeCero && c.reglas.redaccionCubiertaSiContenidoDesdeCero) {
+        /* Anti-duplicación: la preparación desde cero ya cubre los textos. */
+        res.lineas.push({
+          etiqueta: "Redacción de textos",
+          valor: "Incluida",
+          nota: "Cubierta por la preparación de contenido desde cero."
+        });
+      } else if (regla.modo === "plano") {
+        if (typeof regla.precio === "number") {
+          adicionales += regla.precio;
+          res.lineas.push({
+            etiqueta: "Redacción de textos",
+            valor: formatearImporte(regla.precio),
+            nota: "Tarifa por la landing completa."
+          });
+        } else {
+          res.lineas.push({ etiqueta: "Redacción de textos", valor: "Pendiente de cotización" });
+          res.pendientes.push("Redacción de textos: sin tarifa definida");
+        }
+      } else {
+        /* por_pagina: se cobra según las páginas indicadas, con tope
+           en el total de páginas contratadas por el cliente. */
+        var tope = CALC.topePaginas(r);
+        var pedidas = parseInt(r.redaccion_paginas, 10);
+        if (isNaN(pedidas) || pedidas < 1) {
+          res.lineas.push({ etiqueta: "Redacción de textos", valor: "Pendiente de cotización" });
+          res.pendientes.push("Redacción de textos: falta indicar cuántas páginas");
+        } else {
+          var efectivas = pedidas;
+          if (tope > 0 && pedidas > tope) {
+            efectivas = tope;
+            res.observaciones.push(
+              "Pediste redacción para " + pedidas + " páginas, pero el proyecto contempla " + tope +
+              ". Se cotiza sobre " + tope + " páginas: para el resto podemos ampliar el alcance."
+            );
+          }
+          if (typeof regla.precioPorPagina === "number") {
+            var importeRed = efectivas * regla.precioPorPagina;
+            adicionales += importeRed;
+            res.lineas.push({
+              etiqueta: "Redacción de textos (" + efectivas + (efectivas === 1 ? " página" : " páginas") + ")",
+              valor: formatearImporte(importeRed),
+              nota: formatearImporte(regla.precioPorPagina) + " por página."
+            });
+          } else {
+            res.lineas.push({ etiqueta: "Redacción de textos", valor: "Pendiente de cotización" });
+            res.pendientes.push("Redacción de textos: sin tarifa por página definida");
+          }
+        }
       }
     }
 

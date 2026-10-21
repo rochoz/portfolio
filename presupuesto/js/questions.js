@@ -9,6 +9,23 @@
 
 var CALC = CALC || {};
 
+/* Total de páginas contratadas por el cliente (tope para la redacción).
+   Landing = 1 página; institucional = 4 base o las que haya indicado. */
+function topePaginas(r) {
+  if (!r || !r.tipo_proyecto) return 0;
+  if (r.tipo_proyecto === "landing") return 1;
+  if (r.tipo_proyecto === "institucional") {
+    if (r.cantidad === "varias") {
+      var n = parseInt(r.paginas_numero, 10);
+      return isNaN(n) ? 0 : n;
+    }
+    return CALC.config.proyectos.institucional.paginasIncluidas;
+  }
+  return 0;
+}
+
+CALC.topePaginas = topePaginas;
+
 CALC.questions = [
   {
     id: "tipo_proyecto",
@@ -141,6 +158,51 @@ CALC.questions = [
     titulo: "¿Con qué contenido contás?",
     sub: "Sirve para organizar el trabajo sin cobrar dos veces por lo mismo.",
     desdeConfig: "contenidos"
+  },
+
+  {
+    id: "redaccion",
+    tipo: "unica",
+    cuando: function (r) {
+      /* Solo landing e institucional cotizan redacción automáticamente.
+         En catálogo (fichas de producto) se deriva a cotización manual. */
+      return r.ecommerce !== "si" && (r.tipo_proyecto === "landing" || r.tipo_proyecto === "institucional");
+    },
+    titulo: function (r) {
+      if (r.tipo_proyecto === "landing") return "¿Necesitás que escriba los textos de la página?";
+      return "¿Necesitás que escriba los textos del sitio?";
+    },
+    sub: function (r) {
+      if (r.tipo_proyecto === "landing") {
+        return "Si preferís encargarte vos del contenido, elegí la primera opción.";
+      }
+      return "Podés pedir redacción para todas las páginas o solo para algunas.";
+    },
+    /* Opciones estáticas: no dependen de tarifas (las tarifas viven en config). */
+    opciones: function (r) {
+      if (r.tipo_proyecto === "landing") {
+        return [
+          { valor: "no", etiqueta: "No, me encargo yo del contenido", desc: "Escribo o consigo los textos por mi cuenta." },
+          { valor: "si", etiqueta: "Sí, redacción de la landing completa", desc: "Se cotiza una tarifa por la página completa.", cantidad: false }
+        ];
+      }
+      return [
+        { valor: "no", etiqueta: "No, me encargo yo del contenido", desc: "Escribo o consigo los textos por mi cuenta." },
+        { valor: "si", etiqueta: "Sí, necesito redacción", desc: "Indicás cuántas páginas necesitan textos.", cantidad: true }
+      ];
+    },
+    /* Campo numérico condicional: cuántas páginas llevan redacción.
+       El tope se valida contra el total de páginas contratadas. */
+    inputNumero: {
+      paraValor: "si",
+      etiqueta: "¿Cuántas páginas necesitan redacción?",
+      placeholder: "Ej: 3",
+      min: 1,
+      ayuda: function (r) {
+        var tope = topePaginas(r);
+        return tope ? "Podés indicar hasta " + tope + " páginas." : "";
+      }
+    }
   },
 
   {

@@ -30,7 +30,7 @@ CALC.config = {
     whatsapp: "543765115836",
     /* EmailJS: completar con credenciales reales.
        Mientras estén vacías, el botón de email queda deshabilitado. */
-    emailjs: { publicKey: "", serviceId: "", templateId: "" }
+    emailjs: { publicKey: "H9LPq3lz3m58sunYf", serviceId: "service_santiagogimenezw", templateId: "template_60n250z" }
   },
 
   /* PENDIENTE: rangos de inversión del cliente (pregunta 7).
@@ -119,7 +119,7 @@ CALC.config = {
       id: "animaciones",
       nombre: "Animaciones avanzadas",
       descripcion: "Efectos visuales al entrar o al navegar por el sitio.",
-      pricing: "pendiente"
+      pricing: 30000
     },
     {
       id: "loader",
@@ -128,16 +128,10 @@ CALC.config = {
       pricing: 10000
     },
     {
-      id: "redaccion",
-      nombre: "Redacción de textos",
-      descripcion: "Escribo los textos del sitio a partir de tu información.",
-      pricing: "pendiente"
-    },
-    {
       id: "integraciones",
       nombre: "Integraciones externas",
       descripcion: "Conectar el sitio con una herramienta o servicio de terceros.",
-      pricing: "pendiente",
+      pricing: 40000,
       requiereDescripcion: true
     },
     {
@@ -148,6 +142,18 @@ CALC.config = {
     }
   ],
 
+  /* Redacción de textos — regla propia, fuera de "funcionalidades".
+     No es un adicional plano: se calcula según el alcance.
+       landing       → tarifa plana por la landing completa
+       institucional → precio por página (el cliente indica cuántas)
+       catalogo      → fichas de producto: se cotiza aparte (manual)
+     El tope de páginas siempre es el total contratado por el cliente. */
+  redaccion: {
+    landing: { modo: "plano", precio: 15000 },
+    institucional: { modo: "por_pagina", precioPorPagina: 8000 },
+    catalogo: { modo: "manual" }
+  },
+
   contenidos: [
     { id: "tenido", nombre: "Ya tengo textos e imágenes", descripcion: "Recibo el contenido listo para usar." },
     { id: "parcial", nombre: "Tengo parte del contenido preparado", descripcion: "Algo está listo y falta completar el resto." },
@@ -155,7 +161,7 @@ CALC.config = {
       id: "desde_cero",
       nombre: "Necesito que se prepare todo desde cero",
       descripcion: "Los textos e imágenes se producen durante el proyecto.",
-      pricing: "pendiente"
+      pricing: 35000
     }
   ],
 

@@ -107,6 +107,13 @@ var CALC = CALC || {};
     return etiquetaUnica("cantidad", v);
   }
 
+  function etiquetaRedaccion() {
+    if (estado.respuestas.redaccion !== "si") return "No, el contenido lo aporta el cliente";
+    if (estado.respuestas.tipo_proyecto === "landing") return "Sí, landing completa";
+    var n = estado.respuestas.redaccion_paginas;
+    return n ? "Sí, " + String(n) + (Number(n) === 1 ? " página" : " páginas") : "Sí";
+  }
+
   function etiquetaPresupuestoDisponible() {
     if (estado.respuestas.rango_inversion) {
       return etiquetaUnica("rango_inversion", estado.respuestas.rango_inversion);
@@ -181,7 +188,24 @@ var CALC = CALC || {};
         "</div>"
       );
     }
-    /* Texto condicional de integraciones externas. */
+    /* Campo numérico condicional de la pregunta de redacción. */
+  if (q.id === "redaccion" && q.inputNumero) {
+    var cfgR = q.inputNumero;
+    var marcado = estado.respuestas[q.id];
+    var activo = marcado === cfgR.paraValor;
+    var valR = estado.respuestas.redaccion_paginas || "";
+    var tope = CALC.topePaginas(estado.respuestas);
+    return (
+      '<div class="calc-extra" data-extra="redaccion"' + (activo ? "" : " hidden") + ">" +
+        '<label class="calc-campo-etiqueta" for="calc-redaccion-paginas">' + esc(cfgR.etiqueta) + "</label>" +
+        '<input class="calc-campo" id="calc-redaccion-paginas" type="number" inputmode="numeric" min="' +
+          esc(cfgR.min) + '"' + (tope > 0 ? ' max="' + esc(tope) + '"' : "") +
+          ' step="1" placeholder="' + esc(cfgR.placeholder) + '" value="' + esc(valR) + '">' +
+        (cfgR.ayuda ? '<p class="calc-campo-ayuda">' + esc(typeof cfgR.ayuda === "function" ? cfgR.ayuda(estado.respuestas) : cfgR.ayuda) + "</p>" : "") +
+      "</div>"
+    );
+  }
+  /* Texto condicional de integraciones externas. */
     if (q.tipo === "multi" && q.textoSiSeleccion) {
       var t = q.textoSiSeleccion;
       var sel = estado.respuestas[q.id] || [];
@@ -316,6 +340,10 @@ var CALC = CALC || {};
         var num = els.pasoContenedor.querySelector("#calc-numero");
         if (num && num.value !== "") estado.respuestas.paginas_numero = num.value;
       }
+      if (q.id === "redaccion" && q.inputNumero) {
+        var numR = els.pasoContenedor.querySelector("#calc-redaccion-paginas");
+        if (numR && numR.value !== "") estado.respuestas.redaccion_paginas = numR.value;
+      }
     } else if (q.tipo === "multi") {
       var vals = [];
       els.pasoContenedor.querySelectorAll('input[name="' + q.id + '"]:checked').forEach(function (i) {
@@ -364,6 +392,30 @@ var CALC = CALC || {};
           estado.respuestas.paginas_numero = String(n);
         } else {
           delete estado.respuestas.paginas_numero;
+        }
+      }
+      if (q.id === "redaccion" && q.inputNumero) {
+        var cfgR = q.inputNumero;
+        if (marcado.value === cfgR.paraValor) {
+          var numR = els.pasoContenedor.querySelector("#calc-redaccion-paginas");
+          var cantR = parseInt(numR.value, 10);
+          var tope = CALC.topePaginas(estado.respuestas);
+          if (isNaN(cantR) || cantR < cfgR.min) {
+            mostrarError("Indicá cuántas páginas necesitan redacción (" + cfgR.min + " o más).", numR);
+            numR.setAttribute("aria-invalid", "true");
+            return false;
+          }
+          if (tope > 0 && cantR > tope) {
+            mostrarError(
+              "El proyecto contempla " + tope + (tope === 1 ? " página" : " páginas") +
+              ". Si necesitás redacción para más, primero ampliá el alcance del sitio.", numR
+            );
+            numR.setAttribute("aria-invalid", "true");
+            return false;
+          }
+          estado.respuestas.redaccion_paginas = String(cantR);
+        } else {
+          delete estado.respuestas.redaccion_paginas;
         }
       }
       return true;
@@ -487,6 +539,8 @@ var CALC = CALC || {};
         valor = partes.join(" · ");
       } else if (q.id === "cantidad") {
         valor = etiquetaCantidad();
+      } else if (q.id === "redaccion") {
+        valor = etiquetaRedaccion();
       } else {
         valor = etiquetaUnica(q.id, estado.respuestas[q.id]);
       }
@@ -921,6 +975,23 @@ var CALC = CALC || {};
           if (input.value === "varias") {
             var num = els.pasoContenedor.querySelector("#calc-numero");
             if (num && !num.value) num.focus();
+          }
+        }
+      }
+      if (q.id === "redaccion" && q.inputNumero) {
+        var cajaR = els.pasoContenedor.querySelector('[data-extra="redaccion"]');
+        if (cajaR) {
+          var mostrarR = input.value === q.inputNumero.paraValor;
+          cajaR.hidden = !mostrarR;
+          if (mostrarR) {
+            var numR = els.pasoContenedor.querySelector("#calc-redaccion-paginas");
+            if (numR && !numR.value) numR.focus();
+          } else {
+            var campoR = els.pasoContenedor.querySelector("#calc-redaccion-paginas");
+            if (campoR) {
+              campoR.value = "";
+              delete estado.respuestas.redaccion_paginas;
+            }
           }
         }
       }
