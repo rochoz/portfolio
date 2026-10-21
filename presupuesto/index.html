@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de presupuestos | Santiago Gimenez</title>
+    <meta name="description" content="Calculá un presupuesto estimado para tu landing, sitio institucional o catálogo de productos. Respondé unas preguntas y recibí una estimación en ARS con opciones para copiar, WhatsApp o email.">
+    <meta name="theme-color" content="#1b211b">
+    <link rel="stylesheet" href="presupuesto.css">
+    <script src="js/config.js" defer></script>
+    <script src="js/questions.js" defer></script>
+    <script src="js/engine.js" defer></script>
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+    <a class="calc-skip" href="#cuestionario">Ir al cuestionario</a>
+
+    <header class="calc-nav">
+        <div class="calc-nav-inner">
+            <a class="calc-logo" href="../">Santiago Gimenez</a>
+            <a class="calc-volver" href="../">Volver al portfolio</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="calc-hero">
+            <p class="calc-badge"><span class="calc-badge-dot" aria-hidden="true"></span> Presupuesto estimado en línea</p>
+            <h1 class="calc-hero-title">Calculá el presupuesto de tu sitio web</h1>
+            <p class="calc-hero-sub">
+                Respondé unas preguntas simples y obtené una estimación en pesos argentinos.
+                Sin horas técnicas ni tecnicismos: solo lo que necesitás saber para tomar una decisión.
+            </p>
+        </section>
+
+        <div class="calc-card">
+            <!-- Progreso: se actualiza desde app.js -->
+            <div class="calc-progreso">
+                <div class="calc-progreso-meta">
+                    <p id="progress-label" class="calc-progreso-texto">Pregunta 1 de 8</p>
+                </div>
+                <div
+                    id="progress-bar"
+                    class="calc-progreso-barra"
+                    role="progressbar"
+                    aria-valuemin="1"
+                    aria-valuemax="8"
+                    aria-valuenow="1"
+                    aria-label="Progreso del cuestionario"
+                >
+                    <span id="progress-fill" class="calc-progreso-relleno" style="width: 12.5%"></span>
+                </div>
+            </div>
+
+            <!-- Cuestionario: una pregunta por pantalla (renderizado por app.js) -->
+            <div id="cuestionario">
+                <div id="step-container"></div>
+            </div>
+
+            <!-- Resultado: desglose, total, respuestas y acciones de contacto -->
+            <div id="resultado" class="calc-resultado" tabindex="-1" aria-labelledby="resultado-titulo" hidden></div>
+
+            <noscript>
+                <p class="calc-noscript">
+                    Esta calculadora necesita JavaScript activado para funcionar.
+                    Si no podés usarla, escribime por WhatsApp desde el botón de contacto del portfolio
+                    o contestame por email y te preparo la propuesta a mano.
+                </p>
+            </noscript>
+        </div>
+
+        <p class="calc-legal">
+            Los valores mostrados son estimaciones con vigencia de 15 días y no constituyen una cotización definitiva.
+            El dominio y el hosting se contratan aparte.
+        </p>
+    </main>
+
+    <footer class="calc-footer">
+        <p>© <span id="year">2026</span> Santiago Gimenez — Desarrollo web freelance</p>
+        <p class="calc-footer-nota">Presupuestos estimados en pesos argentinos (ARS).</p>
+    </footer>
+
+    <!-- Confirmaciones de acción (solo copiado / reinicio: nunca confirma envíos) -->
+    <div id="toast" class="calc-toast" role="status" aria-live="polite"></div>
+</body>
+</html>
