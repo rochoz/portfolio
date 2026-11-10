@@ -107,13 +107,6 @@ var CALC = CALC || {};
     return etiquetaUnica("cantidad", v);
   }
 
-  function etiquetaRedaccion() {
-    if (estado.respuestas.redaccion !== "si") return "No, el contenido lo aporta el cliente";
-    if (estado.respuestas.tipo_proyecto === "landing") return "Sí, landing completa";
-    var n = estado.respuestas.redaccion_paginas;
-    return n ? "Sí, " + String(n) + (Number(n) === 1 ? " página" : " páginas") : "Sí";
-  }
-
   function etiquetaPresupuestoDisponible() {
     if (estado.respuestas.rango_inversion) {
       return etiquetaUnica("rango_inversion", estado.respuestas.rango_inversion);
@@ -188,23 +181,6 @@ var CALC = CALC || {};
         "</div>"
       );
     }
-    /* Campo numérico condicional de la pregunta de redacción. */
-  if (q.id === "redaccion" && q.inputNumero) {
-    var cfgR = q.inputNumero;
-    var marcado = estado.respuestas[q.id];
-    var activo = marcado === cfgR.paraValor;
-    var valR = estado.respuestas.redaccion_paginas || "";
-    var tope = CALC.topePaginas(estado.respuestas);
-    return (
-      '<div class="calc-extra" data-extra="redaccion"' + (activo ? "" : " hidden") + ">" +
-        '<label class="calc-campo-etiqueta" for="calc-redaccion-paginas">' + esc(cfgR.etiqueta) + "</label>" +
-        '<input class="calc-campo" id="calc-redaccion-paginas" type="number" inputmode="numeric" min="' +
-          esc(cfgR.min) + '"' + (tope > 0 ? ' max="' + esc(tope) + '"' : "") +
-          ' step="1" placeholder="' + esc(cfgR.placeholder) + '" value="' + esc(valR) + '">' +
-        (cfgR.ayuda ? '<p class="calc-campo-ayuda">' + esc(typeof cfgR.ayuda === "function" ? cfgR.ayuda(estado.respuestas) : cfgR.ayuda) + "</p>" : "") +
-      "</div>"
-    );
-  }
   /* Texto condicional de integraciones externas. */
     if (q.tipo === "multi" && q.textoSiSeleccion) {
       var t = q.textoSiSeleccion;
@@ -340,10 +316,6 @@ var CALC = CALC || {};
         var num = els.pasoContenedor.querySelector("#calc-numero");
         if (num && num.value !== "") estado.respuestas.paginas_numero = num.value;
       }
-      if (q.id === "redaccion" && q.inputNumero) {
-        var numR = els.pasoContenedor.querySelector("#calc-redaccion-paginas");
-        if (numR && numR.value !== "") estado.respuestas.redaccion_paginas = numR.value;
-      }
     } else if (q.tipo === "multi") {
       var vals = [];
       els.pasoContenedor.querySelectorAll('input[name="' + q.id + '"]:checked').forEach(function (i) {
@@ -392,30 +364,6 @@ var CALC = CALC || {};
           estado.respuestas.paginas_numero = String(n);
         } else {
           delete estado.respuestas.paginas_numero;
-        }
-      }
-      if (q.id === "redaccion" && q.inputNumero) {
-        var cfgR = q.inputNumero;
-        if (marcado.value === cfgR.paraValor) {
-          var numR = els.pasoContenedor.querySelector("#calc-redaccion-paginas");
-          var cantR = parseInt(numR.value, 10);
-          var tope = CALC.topePaginas(estado.respuestas);
-          if (isNaN(cantR) || cantR < cfgR.min) {
-            mostrarError("Indicá cuántas páginas necesitan redacción (" + cfgR.min + " o más).", numR);
-            numR.setAttribute("aria-invalid", "true");
-            return false;
-          }
-          if (tope > 0 && cantR > tope) {
-            mostrarError(
-              "El proyecto contempla " + tope + (tope === 1 ? " página" : " páginas") +
-              ". Si necesitás redacción para más, primero ampliá el alcance del sitio.", numR
-            );
-            numR.setAttribute("aria-invalid", "true");
-            return false;
-          }
-          estado.respuestas.redaccion_paginas = String(cantR);
-        } else {
-          delete estado.respuestas.redaccion_paginas;
         }
       }
       return true;
@@ -539,8 +487,6 @@ var CALC = CALC || {};
         valor = partes.join(" · ");
       } else if (q.id === "cantidad") {
         valor = etiquetaCantidad();
-      } else if (q.id === "redaccion") {
-        valor = etiquetaRedaccion();
       } else {
         valor = etiquetaUnica(q.id, estado.respuestas[q.id]);
       }
@@ -589,7 +535,7 @@ var CALC = CALC || {};
     var parcial = calc.estado === "pendiente";
     var html =
       '<section class="calc-total ' + (parcial ? "calc-total--pendiente" : "calc-total--estimado") + '">' +
-        '<p class="calc-total-etiqueta">' + (parcial ? "Estimación parcial (pendiente de cotización)" : "Total estimado") + "</p>" +
+        '<p class="calc-total-etiqueta">' + (parcial ? "Subtotal estimado (conceptos tarifados)" : "Total estimado") + "</p>" +
         '<p class="calc-total-valor">' + esc(CALC.engine.formatearImporte(calc.total)) + "</p>";
 
     if (calc.rango) {
@@ -604,10 +550,10 @@ var CALC = CALC || {};
     if (parcial) {
       html +=
         '<div class="calc-pendientes">' +
-          '<p class="calc-pendientes-titulo">Puntos pendientes de definir:</p>' +
+          '<p class="calc-pendientes-titulo">Pendientes de cotización:</p>' +
           "<ul>" + calc.pendientes.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>" +
         "</div>";
-      html += '<p class="calc-total-nota">Este importe es parcial: no es una cotización definitiva hasta confirmar estos puntos.</p>';
+      html += '<p class="calc-total-nota">El subtotal no incluye estos pendientes: se cotizan aparte y el precio final se confirma después de evaluarlos.</p>';
     }
     html += "</section>";
     return html;
@@ -646,7 +592,7 @@ var CALC = CALC || {};
     if (calc.estado === "estimado") {
       lead = "Según tus respuestas, este es el presupuesto estimado para tu proyecto.";
     } else if (calc.estado === "pendiente") {
-      lead = "Este cálculo es parcial: hay puntos sin tarifrar que se definen en la conversación antes de cerrar la cotización.";
+      lead = "El subtotal incluye solo los conceptos tarifados. Los pendientes se cotizan aparte y el precio final se confirma después de evaluarlos.";
     }
 
     var observaciones = calc.observaciones.length
@@ -674,7 +620,7 @@ var CALC = CALC || {};
     var html =
       '<p class="calc-estado ' + estadoClase(calc.estado) + '">' +
         (calc.estado === "estimado" ? "Presupuesto estimado" :
-         calc.estado === "pendiente" ? "Pendiente de cotización" : "Cotización personalizada") +
+         calc.estado === "pendiente" ? "Presupuesto parcial" : "Cotización personalizada") +
       "</p>" +
       '<h2 class="calc-resultado-titulo" id="resultado-titulo">' + esc(tituloResultado(calc.estado)) + "</h2>" +
       (lead ? '<p class="calc-resultado-lead">' + esc(lead) + "</p>" : "") +
@@ -733,8 +679,9 @@ var CALC = CALC || {};
         " (vigencia de " + calc.vigenciaDias + " días; no es una cotización definitiva)";
     }
     if (calc.estado === "pendiente") {
-      return "Presupuesto estimado (parcial): " + CALC.engine.formatearImporte(calc.total) +
-        " — pendiente de cotización: " + calc.pendientes.join("; ");
+      return "Subtotal estimado (conceptos tarifados): " + CALC.engine.formatearImporte(calc.total) +
+        " — Pendientes de cotización: " + calc.pendientes.join("; ") +
+        " — El precio final se confirma después de evaluar estos pendientes.";
     }
     return "Estado: requiere cotización personalizada (" + calc.motivosManual.join("; ") + ")";
   }
@@ -821,15 +768,19 @@ var CALC = CALC || {};
       calc.lineas.forEach(function (l) {
         lineas.push(l.etiqueta + ": " + l.valor + (l.nota ? " (" + l.nota + ")" : ""));
       });
-      lineas.push("Total estimado: " + CALC.engine.formatearImporte(calc.total));
+      lineas.push(
+        (calc.estado === "pendiente" ? "Subtotal estimado (conceptos tarifados): " : "Total estimado: ") +
+        CALC.engine.formatearImporte(calc.total)
+      );
       if (calc.rango) {
         lineas.push("Rango estimado: " + CALC.engine.formatearImporte(calc.rango[0]) +
           " – " + CALC.engine.formatearImporte(calc.rango[1]));
       }
       lineas.push("Vigencia de la cotización: " + calc.vigenciaDias + " días");
       if (calc.estado === "pendiente") {
-        lineas.push("Estado: PENDIENTE DE COTIZACIÓN (importes parciales):");
+        lineas.push("Pendientes de cotización (no incluidos en el subtotal):");
         calc.pendientes.forEach(function (p) { lineas.push(" - " + p); });
+        lineas.push("El precio final se confirma después de evaluar estos pendientes.");
       }
     }
     if (calc.observaciones.length) {
@@ -975,23 +926,6 @@ var CALC = CALC || {};
           if (input.value === "varias") {
             var num = els.pasoContenedor.querySelector("#calc-numero");
             if (num && !num.value) num.focus();
-          }
-        }
-      }
-      if (q.id === "redaccion" && q.inputNumero) {
-        var cajaR = els.pasoContenedor.querySelector('[data-extra="redaccion"]');
-        if (cajaR) {
-          var mostrarR = input.value === q.inputNumero.paraValor;
-          cajaR.hidden = !mostrarR;
-          if (mostrarR) {
-            var numR = els.pasoContenedor.querySelector("#calc-redaccion-paginas");
-            if (numR && !numR.value) numR.focus();
-          } else {
-            var campoR = els.pasoContenedor.querySelector("#calc-redaccion-paginas");
-            if (campoR) {
-              campoR.value = "";
-              delete estado.respuestas.redaccion_paginas;
-            }
           }
         }
       }

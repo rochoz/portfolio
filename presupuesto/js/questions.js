@@ -9,23 +9,6 @@
 
 var CALC = CALC || {};
 
-/* Total de páginas contratadas por el cliente (tope para la redacción).
-   Landing = 1 página; institucional = 4 base o las que haya indicado. */
-function topePaginas(r) {
-  if (!r || !r.tipo_proyecto) return 0;
-  if (r.tipo_proyecto === "landing") return 1;
-  if (r.tipo_proyecto === "institucional") {
-    if (r.cantidad === "varias") {
-      var n = parseInt(r.paginas_numero, 10);
-      return isNaN(n) ? 0 : n;
-    }
-    return CALC.config.proyectos.institucional.paginasIncluidas;
-  }
-  return 0;
-}
-
-CALC.topePaginas = topePaginas;
-
 CALC.questions = [
   {
     id: "tipo_proyecto",
@@ -88,21 +71,22 @@ CALC.questions = [
       if (r.tipo_proyecto === "landing") {
         return "Una landing es una sola página: las secciones no se cuentan como páginas independientes.";
       }
-      return "Según esta respuesta calculamos el precio o derivamos a cotización personalizada.";
+      return "Según esta respuesta ajustamos el subtotal o dejamos puntos por definir en la conversación.";
     },
     opciones: function (r) {
       if (r.tipo_proyecto === "landing") {
+        var L = CALC.config.proyectos.landing;
         return [
-          { valor: "pocas", etiqueta: "Contenido en pocas secciones", desc: "Una propuesta concentrada y directa." },
-          { valor: "muchas", etiqueta: "Varias secciones de contenido", desc: "Más detalle sobre tu negocio o servicio." },
-          { valor: "no_se", etiqueta: "Todavía no lo sé", desc: "Lo definimos en la conversación." }
+          { valor: "pocas", etiqueta: "Contenido en pocas secciones", desc: "Hasta " + L.seccionesIncluidas + " secciones de contenido. El header y el footer no cuentan." },
+          { valor: "muchas", etiqueta: "Varias secciones de contenido", desc: "De " + (L.seccionesIncluidas + 1) + " a " + L.seccionesRangoHasta + " secciones de contenido (header y footer no cuentan): suma " + CALC.engine.formatearImporte(L.seccionesAdicional) + "." },
+          { valor: "no_se", etiqueta: "Todavía no lo sé", desc: "Definimos el alcance en la conversación: el precio queda estimativo y sujeto a confirmación." }
         ];
       }
       if (r.tipo_proyecto === "institucional") {
         return [
           { valor: "hasta_4", etiqueta: "Hasta 4 páginas", desc: "Está incluido en el precio base." },
           { valor: "varias", etiqueta: "De 5 páginas en adelante", desc: "Cada página adicional suma AR$40.000.", numero: true },
-          { valor: "no_se", etiqueta: "Todavía no lo sé", desc: "Se define en la conversación con una cotización personalizada." }
+          { valor: "no_se", etiqueta: "Todavía no lo sé", desc: "Se define en la conversación: el subtotal considera hasta 4 páginas incluidas." }
         ];
       }
       return [
@@ -137,13 +121,13 @@ CALC.questions = [
       return r.ecommerce !== "si";
     },
     titulo: "¿Qué funcionalidades necesitás?",
-    sub: "Podés seleccionar varias o ninguna. Cada una se explica en simple. Algunas todavía no tienen tarifa definida: si las elegís, el presupuesto queda marcado como pendiente de cotización.",
+    sub: "Podés seleccionar varias o ninguna. Cada una explica qué incluye y qué no. Las reseñas de Google se cotizan aparte: si las elegís, quedan en la lista de pendientes y no suman al subtotal.",
     desdeConfig: "funcionalidades",
     ayudaMulti: "No hace falta que elijas ninguna si no la necesitás.",
     textoSiSeleccion: {
       paraId: "integraciones",
       etiqueta: "Contame brevemente qué herramienta o servicio necesitás integrar",
-      placeholder: "Ej: sistema de turnos, newsletter, herramienta de turnos, publicidad…",
+      placeholder: "Ej: sistema de mailings, chat online, herramienta de facturación…",
       requerido: true,
       error: "Contanos qué herramienta o servicio necesitás integrar para poder evaluarlo."
     }
@@ -156,63 +140,20 @@ CALC.questions = [
       return r.ecommerce !== "si";
     },
     titulo: "¿Con qué contenido contás?",
-    sub: "Sirve para organizar el trabajo sin cobrar dos veces por lo mismo.",
+    sub: "La redacción comercial básica está incluida en el precio de los tres paquetes: si ya tenés textos, los usamos.",
     desdeConfig: "contenidos"
   },
 
-  {
-    id: "redaccion",
-    tipo: "unica",
-    cuando: function (r) {
-      /* Solo landing e institucional cotizan redacción automáticamente.
-         En catálogo (fichas de producto) se deriva a cotización manual. */
-      return r.ecommerce !== "si" && (r.tipo_proyecto === "landing" || r.tipo_proyecto === "institucional");
-    },
-    titulo: function (r) {
-      if (r.tipo_proyecto === "landing") return "¿Necesitás que escriba los textos de la página?";
-      return "¿Necesitás que escriba los textos del sitio?";
-    },
-    sub: function (r) {
-      if (r.tipo_proyecto === "landing") {
-        return "Si preferís encargarte vos del contenido, elegí la primera opción.";
-      }
-      return "Podés pedir redacción para todas las páginas o solo para algunas.";
-    },
-    /* Opciones estáticas: no dependen de tarifas (las tarifas viven en config). */
-    opciones: function (r) {
-      if (r.tipo_proyecto === "landing") {
-        return [
-          { valor: "no", etiqueta: "No, me encargo yo del contenido", desc: "Escribo o consigo los textos por mi cuenta." },
-          { valor: "si", etiqueta: "Sí, redacción de la landing completa", desc: "Se cotiza una tarifa por la página completa.", cantidad: false }
-        ];
-      }
-      return [
-        { valor: "no", etiqueta: "No, me encargo yo del contenido", desc: "Escribo o consigo los textos por mi cuenta." },
-        { valor: "si", etiqueta: "Sí, necesito redacción", desc: "Indicás cuántas páginas necesitan textos.", cantidad: true }
-      ];
-    },
-    /* Campo numérico condicional: cuántas páginas llevan redacción.
-       El tope se valida contra el total de páginas contratadas. */
-    inputNumero: {
-      paraValor: "si",
-      etiqueta: "¿Cuántas páginas necesitan redacción?",
-      placeholder: "Ej: 3",
-      min: 1,
-      ayuda: function (r) {
-        var tope = topePaginas(r);
-        return tope ? "Podés indicar hasta " + tope + " páginas." : "";
-      }
-    }
-  },
-
+  /* Branding: si el cliente necesita crear o mejorar su identidad,
+     el servicio queda como pendiente de cotización (regla en engine). */
   {
     id: "identidad",
     tipo: "unica",
     cuando: function (r) {
       return r.ecommerce !== "si";
     },
-    titulo: "¿Ya tenés identidad visual?",
-    sub: "Logo, colores y recursos de marca. Esta respuesta nos ayuda a preparar mejor la propuesta.",
+    titulo: "¿Ya tenés logo e identidad visual para tu negocio?",
+    sub: "Nos sirve para preparar la propuesta. Crear o mejorar el logo y la identidad se cotiza aparte: queda pendiente y no modifica el subtotal.",
     desdeConfig: "identidades"
   },
 

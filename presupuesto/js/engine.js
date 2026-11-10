@@ -4,19 +4,38 @@
    Lógica pura: no accede al DOM ni define interfaz.
    Entrada: objeto de respuestas. Salida: desglose + estado.
 
-   Estados:
-     "estimado" → total completo, con vigencia de cotización
-     "pendiente"→ total PARCIAL: hay adicionales sin tarifa definida;
-                  nunca se presenta como cotización definitiva
-     "manual"   → sin total automático: cotización personalizada
+   Estados (equivalencia con la especificación del propietario):
+     "estimado"  → estimated         todos los conceptos tarifados:
+                                     total estimado completo
+     "pendiente" → partial_estimate  hay conceptos tarifados y otros que
+                                     requieren cotización manual: se muestra
+                                     el SUBTOTAL de lo tarifado + la lista de
+                                     pendientes; nunca se presenta como
+                                     total definitivo ni suma lo pendiente
+     "manual"    → manual_quote      no existe una base aplicable para
+                                     calcular un subtotal: cotización
+                                     personalizada, sin importes
 
    Reglas comerciales aplicadas (definidas por el propietario):
-     - Landing ARS 200.000 (tarifa plana; secciones sin cargo)
+     - Landing ARS 200.000 con hasta 5 secciones de contenido
+       (header y footer no cuentan); de 6 a 10 secciones suman
+       ARS 40.000; alcance sin definir → estimación parcial
      - Institucional ARS 350.000 con hasta 4 páginas incluidas;
-       ARS 40.000 por cada página adicional
-     - Catálogo ARS 320.000 con hasta 10 productos incluidos
-     - Más de 10 productos, páginas desconocidas, ecommerce y
-       desarrollos a medida → cotización manual
+       ARS 40.000 por cada página adicional; cantidad sin definir →
+       estimación parcial (subtotal con el estándar de 4 páginas)
+     - Catálogo ARS 320.000 con hasta 10 productos incluidos;
+       más de 10 → estimación parcial (sin tarifa por producto extra)
+     - Redacción comercial básica de textos incluida en el precio
+       base (sin investigaciones especializadas, traducciones ni
+       contenido técnico complejo; las 2 rondas de revisiones
+       también aplican a los textos)
+     - Todo concepto sin tarifa definida (reseñas de Google,
+       logo/branding, funciones sin tarifa, productos o páginas
+       extra) se LISTA como pendiente de cotización y NO bloquea
+       el subtotal ni se presenta como incluido gratuitamente
+     - Derivación a cotización manual COMPLETA (sin subtotal):
+       ecommerce (pagos, carrito, stock) y función a medida
+       (desarrollo complejo) — derivaciones manuales existentes
      - Sin estimar horas: no hay cargos por tiempo.
    ============================================================= */
 
@@ -53,9 +72,13 @@ CALC.engine = (function () {
     return null;
   }
 
-  /* Motivos que derivan el proyecto a cotización personalizada.
-     Se usa tanto para ocultar preguntas irrelevantes (app) como
-     para el resultado (calcular). */
+  /* Conceptos que derivan el proyecto COMPLETO a cotización
+     personalizada (manual_quote): no existe una base aplicable para
+     calcular un subtotal. Solo dos casos:
+       - ecommerce (pagos, carrito, stock)
+       - función especial a medida (desarrollo complejo)
+     Todo otro concepto sin tarifa definida se maneja como
+     "pendientes de cotización" y NO oculta el subtotal (calcular). */
   function motivosManual(r) {
     var motivos = [];
     if (!r || !r.tipo_proyecto) return motivos;
@@ -63,22 +86,24 @@ CALC.engine = (function () {
     if (r.ecommerce === "si") {
       motivos.push("Venta online con pagos, carrito de compras o gestión de stock");
     }
-    if (r.tipo_proyecto === "institucional" && r.cantidad === "no_se") {
-      motivos.push("Cantidad de páginas sin definir");
-    }
-    if (r.tipo_proyecto === "catalogo" && r.cantidad === "mas_10") {
-      motivos.push("Más de 10 productos en el catálogo");
-    }
-    /* Catálogo: la redacción de fichas de producto se cotiza aparte. */
-    var reglasRed = cfg().redaccion || {};
-    var reglaRed = reglasRed[r.tipo_proyecto];
-    if (r.redaccion === "si" && reglaRed && reglaRed.modo === "manual") {
-      motivos.push("Redacción de fichas de producto: se cotiza aparte");
-    }
     if ((r.funcionalidades || []).indexOf("a_medida") !== -1) {
-      motivos.push("Función especial a medida a evaluar");
+      motivos.push("Función especial a medida: desarrollo complejo que requiere evaluar el proyecto");
     }
     return motivos;
+  }
+
+  /* Textos por concepto seleccionado sin tarifa definida para el
+     alcance contratado (pendiente de cotización). Casos con
+     explicación comercial específica; el resto, genérico. */
+  function textoPendienteAdicional(f, r) {
+    if (f.id === "testimonios") {
+      return "Reseñas de Google Maps: se evalúa según tu perfil y plan de Google; se cotiza aparte";
+    }
+    if (f.id === "idioma_extra" && r.tipo_proyecto === "institucional" && r.cantidad === "varias") {
+      var tope = cfg().proyectos.institucional.paginasIncluidas;
+      return "Sitio en dos idiomas con más de " + tope + " páginas: alcance mayor al estándar, se cotiza aparte";
+    }
+    return f.nombre + ": se cotiza aparte";
   }
 
   /* ¿La derivación a manual ocurre antes del contacto (solo ecommerce)?
@@ -116,7 +141,7 @@ CALC.engine = (function () {
     res.proyecto = { id: r.tipo_proyecto, nombre: p.nombre };
     res.incluidos = p.incluye.slice();
 
-    /* --- Derivaciones a cotización manual (sin total) --- */
+    /* --- Derivaciones a cotización manual COMPLETA (sin subtotal) --- */
     res.motivosManual = motivosManual(r);
     if (res.motivosManual.length) {
       res.estado = "manual";
@@ -134,7 +159,28 @@ CALC.engine = (function () {
 
     /* --- Cantidad: páginas / secciones / productos --- */
     if (r.tipo_proyecto === "landing") {
-      /* Tarifa plana: las secciones no modifican el precio. */
+      if (r.cantidad === "pocas") {
+        res.lineas.push({
+          etiqueta: "Secciones",
+          valor: "Hasta " + p.seccionesIncluidas + " secciones",
+          nota: "Incluidas en el precio base."
+        });
+      } else if (r.cantidad === "muchas") {
+        /* Banda fija de 6 a 10 secciones: un solo adicional, nunca por sección. */
+        adicionales += p.seccionesAdicional;
+        res.lineas.push({
+          etiqueta: "Secciones (de " + (p.seccionesIncluidas + 1) + " a " + p.seccionesRangoHasta + ")",
+          valor: formatearImporte(p.seccionesAdicional),
+          nota: "Adicional sobre el precio base: hasta " + p.seccionesIncluidas + " incluidas."
+        });
+      } else if (r.cantidad === "no_se") {
+        res.lineas.push({
+          etiqueta: "Secciones",
+          valor: "Alcance por definir",
+          nota: "Estimación sujeta a confirmación del alcance."
+        });
+        res.pendientes.push("Alcance de secciones sin definir: el total es estimativo y queda sujeto a confirmación.");
+      }
     } else if (r.tipo_proyecto === "institucional") {
       if (r.cantidad === "hasta_4") {
         res.lineas.push({
@@ -142,6 +188,13 @@ CALC.engine = (function () {
           valor: "Hasta " + p.paginasIncluidas + " páginas",
           nota: "Incluidas en el precio base."
         });
+      } else if (r.cantidad === "no_se") {
+        res.lineas.push({
+          etiqueta: "Páginas",
+          valor: "Alcance por definir",
+          nota: "Hasta " + p.paginasIncluidas + " páginas incluidas en el precio base."
+        });
+        res.pendientes.push("Cantidad de páginas sin definir: el subtotal considera " + p.paginasIncluidas + " páginas y se ajusta al definir el alcance.");
       } else if (r.cantidad === "varias") {
         var n = parseInt(r.paginas_numero, 10);
         if (!isNaN(n)) {
@@ -167,6 +220,13 @@ CALC.engine = (function () {
           valor: "Hasta " + p.productosIncluidos + " productos",
           nota: "Incluidos en el precio base."
         });
+      } else if (r.cantidad === "mas_10") {
+        res.lineas.push({
+          etiqueta: "Productos",
+          valor: "Más de " + p.productosIncluidos + " productos",
+          nota: "El subtotal considera hasta " + p.productosIncluidos + " productos incluidos."
+        });
+        res.pendientes.push("Más de " + p.productosIncluidos + " productos: la tarifa por producto adicional se cotiza aparte.");
       } else if (r.cantidad === "no_se") {
         res.lineas.push({
           etiqueta: "Productos",
@@ -199,13 +259,21 @@ CALC.engine = (function () {
       if (!f) return;
       var pr = pricingDe(f.pricing, r.tipo_proyecto);
 
-      if (pr === "manual") {
-        res.motivosManual.push(f.nombre + ": se evalúa caso por caso");
+      /* Sin tarifa definida para este alcance → pendiente de
+         cotización: no bloquea el subtotal ni se cuenta como incluido. */
+      var sinTarifa = pr === "manual" ||
+        (fid === "idioma_extra" && r.tipo_proyecto === "institucional" && r.cantidad === "varias");
+      if (sinTarifa) {
+        res.lineas.push({ etiqueta: f.nombre, valor: "Pendiente de cotización" });
+        res.pendientes.push(textoPendienteAdicional(f, r));
         return;
       }
       if (typeof pr === "number") {
         adicionales += pr;
-        res.lineas.push({ etiqueta: f.nombre, valor: formatearImporte(pr) });
+        /* Line item con descripción de alcance (nota) si el adicional la define. */
+        var detalle = { etiqueta: f.nombre, valor: formatearImporte(pr) };
+        if (f.nota) detalle.nota = f.nota;
+        res.lineas.push(detalle);
         return;
       }
       if (pr === "incluida") {
@@ -222,95 +290,31 @@ CALC.engine = (function () {
     });
 
     /* --- Contenido --- */
-    var desdeCero = r.contenido === "desde_cero";
-    if (desdeCero) {
-      var contenidoCero = buscarPorId(c.contenidos, "desde_cero");
-      res.lineas.push({
-        etiqueta: "Contenido",
-        valor: "Preparación desde cero",
-        nota: contenidoCero && typeof contenidoCero.pricing === "number"
-          ? formatearImporte(contenidoCero.pricing)
-          : ""
-      });
-      if (typeof contenidoCero.pricing === "number") {
-        adicionales += contenidoCero.pricing;
-      } else {
-        res.pendientes.push("Preparación de contenido desde cero: sin tarifa definida");
-      }
-    } else {
-      var contenido = buscarPorId(c.contenidos, r.contenido);
-      if (contenido) {
-        res.lineas.push({ etiqueta: "Contenido", valor: contenido.nombre });
-      }
+    /* La redacción comercial básica de textos está incluida en el
+       precio base: no existe adicional de preparación de contenido
+       (el importe asociado se eliminó de config.js). */
+    var contenido = buscarPorId(c.contenidos, r.contenido);
+    if (contenido) {
+      res.lineas.push({ etiqueta: "Contenido", valor: contenido.nombre });
     }
 
-    /* --- Redacción de textos (regla propia, calculada por alcance) --- */
-    if (r.redaccion === "si") {
-      var regla = c.redaccion[r.tipo_proyecto];
-      if (!regla) {
-        res.pendientes.push("Redacción de textos: sin regla definida para este tipo de proyecto");
-      } else if (regla.modo === "manual") {
-        /* Catálogo: las fichas de producto se cotizan aparte. */
-        res.motivosManual.push("Redacción de fichas de producto: se cotiza aparte");
-      } else if (desdeCero && c.reglas.redaccionCubiertaSiContenidoDesdeCero) {
-        /* Anti-duplicación: la preparación desde cero ya cubre los textos. */
-        res.lineas.push({
-          etiqueta: "Redacción de textos",
-          valor: "Incluida",
-          nota: "Cubierta por la preparación de contenido desde cero."
-        });
-      } else if (regla.modo === "plano") {
-        if (typeof regla.precio === "number") {
-          adicionales += regla.precio;
-          res.lineas.push({
-            etiqueta: "Redacción de textos",
-            valor: formatearImporte(regla.precio),
-            nota: "Tarifa por la landing completa."
-          });
-        } else {
-          res.lineas.push({ etiqueta: "Redacción de textos", valor: "Pendiente de cotización" });
-          res.pendientes.push("Redacción de textos: sin tarifa definida");
-        }
-      } else {
-        /* por_pagina: se cobra según las páginas indicadas, con tope
-           en el total de páginas contratadas por el cliente. */
-        var tope = CALC.topePaginas(r);
-        var pedidas = parseInt(r.redaccion_paginas, 10);
-        if (isNaN(pedidas) || pedidas < 1) {
-          res.lineas.push({ etiqueta: "Redacción de textos", valor: "Pendiente de cotización" });
-          res.pendientes.push("Redacción de textos: falta indicar cuántas páginas");
-        } else {
-          var efectivas = pedidas;
-          if (tope > 0 && pedidas > tope) {
-            efectivas = tope;
-            res.observaciones.push(
-              "Pediste redacción para " + pedidas + " páginas, pero el proyecto contempla " + tope +
-              ". Se cotiza sobre " + tope + " páginas: para el resto podemos ampliar el alcance."
-            );
-          }
-          if (typeof regla.precioPorPagina === "number") {
-            var importeRed = efectivas * regla.precioPorPagina;
-            adicionales += importeRed;
-            res.lineas.push({
-              etiqueta: "Redacción de textos (" + efectivas + (efectivas === 1 ? " página" : " páginas") + ")",
-              valor: formatearImporte(importeRed),
-              nota: formatearImporte(regla.precioPorPagina) + " por página."
-            });
-          } else {
-            res.lineas.push({ etiqueta: "Redacción de textos", valor: "Pendiente de cotización" });
-            res.pendientes.push("Redacción de textos: sin tarifa por página definida");
-          }
-        }
-      }
-    }
-
-    /* --- Identidad visual: solo observación, nunca cargo automático --- */
+    /* --- Branding: logo e identidad visual ---
+       Crearlo o mejorarlo es un adicional sin tarifa definida:
+       se LISTA como pendiente de cotización (no bloquea el subtotal,
+       no se cuenta como incluido y no suma importes desconocidos). */
     var identidad = buscarPorId(c.identidades, r.identidad);
-    if (identidad && identidad.observacion) {
-      res.observaciones.push(identidad.observacion);
+    if (identidad) {
+      if (identidad.id === "parcial" || identidad.id === "ninguna") {
+        res.lineas.push({ etiqueta: "Branding (logo e identidad visual)", valor: "Pendiente de cotización" });
+        res.pendientes.push("Creación o mejora de logo e identidad visual: requiere cotización personalizada (no está incluida en el subtotal).");
+      }
+      if (identidad.observacion) {
+        res.observaciones.push(identidad.observacion);
+      }
     }
 
-    /* --- Total y estado --- */
+    /* --- Total y estado ---
+       pendiente = partial_estimate: subtotal de lo tarifado + pendientes. */
     res.adicionales = adicionales;
     res.total = res.base + adicionales;
     res.estado = res.pendientes.length ? "pendiente" : "estimado";
